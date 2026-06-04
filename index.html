@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shore Thing — Afro Summer Splash</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#D4A017;--dark:#1a1a2e;--sand:#F5E6D3;--orange:#E8651A}
@@ -307,26 +308,29 @@ document.getElementById('regForm').addEventListener('submit', function(e) {
   btn.textContent = 'Securing your spot...';
   btn.disabled = true;
 
-  // Send to Formspree — replace xykayboj with your actual Formspree ID
-  var formData = new FormData();
-  formData.append('First Name', fname);
-  formData.append('Last Name', lname);
-  formData.append('Email', email);
-  formData.append('Instagram', insta || 'Not provided');
-  formData.append('Dish', dish);
-  formData.append('Attended Before', prev.value === 'yes' ? 'Yes — Sip & Paint' : 'No — First time');
+  // Initialise EmailJS
+  emailjs.init('Ff-OzBNvJ5Vlvc7Gc');
 
-  fetch('https://formspree.io/f/xykayboj', {
-    method: 'POST',
-    body: formData,
-    headers: { 'Accept': 'application/json' }
+  // Send confirmation email to attendee
+  var templateParams = {
+    first_name: fname,
+    email: email,
+    ref: genRef(email + dish),
+    dish: dish,
+    instagram: insta || 'Not provided',
+    attended: prev.value === 'yes' ? 'Yes — Sip & Paint' : 'No — First time'
+  };
+
+  emailjs.send('service_3cjnzxw', 'template_vs5vsq7', templateParams)
+  .then(function() {
+    console.log('Confirmation email sent successfully');
   })
-  .catch(function() {
-    // Still show ticket even if submission fails — don't block the user
-    console.log('Submission note: update Formspree ID to capture responses');
+  .catch(function(err) {
+    console.log('Email error:', err);
   })
   .finally(function() {
     showTicket(fname, lname, email, dish, insta);
+  });
   });
 });
 
