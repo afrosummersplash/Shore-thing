@@ -328,6 +328,21 @@ document.getElementById('regForm').addEventListener('submit', function(e) {
     attended: prev.value === 'yes' ? 'Yes — Sip & Paint' : 'No — First time'
   };
 
+  // Send registration data to Formspree (your backend copy)
+  var formData = new FormData();
+  formData.append('First Name', fname);
+  formData.append('Last Name', lname);
+  formData.append('Email', email);
+  formData.append('Instagram', insta || 'Not provided');
+  formData.append('Dish', dish);
+  formData.append('Attended Before', prev.value === 'yes' ? 'Yes — Sip & Paint' : 'No — First time');
+  fetch('https://formspree.io/f/xykayboj', {
+    method: 'POST',
+    body: formData,
+    headers: { 'Accept': 'application/json' }
+  }).catch(function(err){ console.log('Formspree error:', err); });
+
+  // Send confirmation email to attendee via EmailJS
   emailjs.send('service_u6tdzk8', 'template_vs5vsq7', templateParams)
   .then(function() {
     console.log('Confirmation email sent successfully');
