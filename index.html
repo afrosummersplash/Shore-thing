@@ -318,7 +318,7 @@ document.getElementById('regForm').addEventListener('submit', function(e) {
     attended: prev.value === 'yes' ? 'Yes — Sip & Paint' : 'No — First time'
   };
 
-  emailjs.send('service_3cjnzxw', 'template_vs5vsq7', templateParams)
+  emailjs.send('service_u6tdzk8', 'template_vs5vsq7', templateParams)
   .then(function() {
     console.log('Confirmation email sent successfully');
     showTicket(fname, lname, email, dish, insta);
