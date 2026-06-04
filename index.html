@@ -308,9 +308,6 @@ document.getElementById('regForm').addEventListener('submit', function(e) {
   btn.textContent = 'Securing your spot...';
   btn.disabled = true;
 
-  // Initialise EmailJS
-  emailjs.init('Ff-OzBNvJ5Vlvc7Gc');
-
   // Send confirmation email to attendee
   var templateParams = {
     first_name: fname,
@@ -324,11 +321,11 @@ document.getElementById('regForm').addEventListener('submit', function(e) {
   emailjs.send('service_3cjnzxw', 'template_vs5vsq7', templateParams)
   .then(function() {
     console.log('Confirmation email sent successfully');
+    showTicket(fname, lname, email, dish, insta);
   })
   .catch(function(err) {
     console.log('Email error:', err);
-  })
-  .finally(function() {
+    // Always show ticket even if email fails
     showTicket(fname, lname, email, dish, insta);
   });
   });
@@ -371,6 +368,10 @@ function copyShareUrl() {
     setTimeout(function(){ b.textContent = 'Copy'; }, 2000);
   });
 }
+</script>
+<script>
+  // Initialise EmailJS on page load
+  emailjs.init("Ff-OzBNvJ5Vlvc7Gc");
 </script>
 </body>
 </html>
