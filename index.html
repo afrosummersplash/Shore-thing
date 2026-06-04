@@ -131,7 +131,7 @@ input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,160,23,.12)}
 
     <div class="form-card">
       <div class="err-msg" id="errMsg"></div>
-      <form id="regForm" novalidate>
+      <form id="regForm" novalidate action="javascript:void(0)" method="post">
 
         <div class="two-col">
           <div class="field">
@@ -327,7 +327,6 @@ document.getElementById('regForm').addEventListener('submit', function(e) {
     console.log('Email error:', err);
     // Always show ticket even if email fails
     showTicket(fname, lname, email, dish, insta);
-  });
   });
 });
 
