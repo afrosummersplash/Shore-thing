@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shore Thing — Afro Summer Splash</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#D4A017;--dark:#1a1a2e;--sand:#F5E6D3;--orange:#E8651A}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5E6D3;min-height:100vh;padding:1.5rem 1rem 4rem}
+.wrap{max-width:520px;margin:0 auto}
+
+/* HERO */
+.hero{border-radius:16px;padding:2rem 1.5rem;margin-bottom:1.25rem;text-align:center;background:var(--dark);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40px;left:-40px;width:180px;height:180px;border-radius:50%;background:rgba(212,160,23,.07);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-50px;right:-30px;width:220px;height:220px;border-radius:50%;background:rgba(232,101,26,.06);pointer-events:none}
+.hero-title{font-size:26px;font-weight:600;color:var(--gold);margin-bottom:.25rem;position:relative}
+.hero-sub{font-size:13px;color:var(--sand);opacity:.85;margin-bottom:1rem;position:relative}
+.hero-pills{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;position:relative}
+.pill{font-size:11px;padding:4px 12px;border-radius:20px;border:1px solid rgba(212,160,23,.35);color:var(--gold);background:rgba(212,160,23,.1)}
+
+/* FORM CARD */
+.form-card{background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:5px}
+.req{color:var(--gold);margin-left:2px}
+.opt{font-size:11px;font-weight:400;color:#999;margin-left:4px}
+.hint{font-size:11px;color:#999;margin-top:4px}
+input[type=email],input[type=text]{width:100%;padding:11px 13px;font-size:14px;border:1.5px solid #e0d0be;border-radius:10px;background:#fff;color:#333;font-family:inherit;transition:border-color .15s,box-shadow .15s;outline:none}
+input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,160,23,.12)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.radio-group{display:flex;flex-direction:column;gap:8px}
+.radio-item{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;border-radius:10px;border:1.5px solid #e0d0be;transition:border-color .12s,background .12s;background:#fff}
+.radio-item:hover{border-color:var(--gold);background:#fffbf2}
+.radio-item input{accent-color:var(--gold);cursor:pointer;width:16px;height:16px;flex-shrink:0}
+.radio-item span{font-size:13px;color:#333}
+.radio-item.selected{border-color:var(--gold);background:#fffbf2}
+.submit-btn{width:100%;padding:14px;background:var(--gold);border:none;border-radius:10px;font-size:15px;font-weight:600;color:var(--dark);cursor:pointer;font-family:inherit;transition:opacity .15s;margin-top:.5rem}
+.submit-btn:hover{opacity:.9}
+.submit-btn:active{transform:scale(.99)}
+.sub-note{font-size:11px;color:#999;text-align:center;margin-top:8px}
+
+/* TICKET SCREEN */
+#ticketScreen{display:none}
+.confetti-row{display:flex;justify-content:center;gap:6px;font-size:1.6rem;margin-bottom:1rem;animation:popIn .5s ease both}
+@keyframes popIn{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+.confirm-head{text-align:center;margin-bottom:1.25rem;animation:fadeUp .5s .1s ease both;opacity:0;animation-fill-mode:forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.confirm-title{font-size:20px;font-weight:700;color:#1a1a2e;margin-bottom:.35rem}
+.confirm-sub{font-size:13px;color:#666;line-height:1.6}
+
+/* TICKET */
+.ticket-outer{animation:fadeUp .6s .2s ease both;opacity:0;animation-fill-mode:forwards;margin-bottom:1.25rem}
+.ticket{background:var(--dark);border-radius:18px;overflow:hidden}
+.ticket-top{padding:1.5rem 1.5rem 1rem;position:relative;overflow:hidden}
+.ticket-waves{position:absolute;top:0;right:0;width:140px;height:140px;opacity:.09}
+.ticket-brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;position:relative}
+.ticket-brand-name{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.12em;text-transform:uppercase}
+.ticket-badge{font-size:10px;padding:3px 10px;border-radius:10px;background:rgba(212,160,23,.2);color:var(--gold);border:1px solid rgba(212,160,23,.35)}
+.ticket-event{font-size:28px;font-weight:700;color:#fff;line-height:1.1;margin-bottom:.15rem;position:relative}
+.ticket-tagline{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:.1rem}
+
+.ticket-meta{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.1);padding:.9rem 1.5rem}
+.meta-item{text-align:center}
+.meta-item:not(:last-child){border-right:1px solid rgba(255,255,255,.1)}
+.meta-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);margin-bottom:4px}
+.meta-val{font-size:13px;font-weight:600;color:#fff}
+
+.tear-line{display:flex;align-items:center}
+.tear-circle{width:20px;height:20px;border-radius:50%;background:#F5E6D3;flex-shrink:0}
+.tear-dots{flex:1;border-top:2px dashed rgba(255,255,255,.12)}
+
+.ticket-bottom{padding:1.1rem 1.5rem;display:flex;align-items:center;gap:1.2rem}
+.qr-wrap{flex-shrink:0;background:#fff;border-radius:9px;padding:7px;display:flex;align-items:center;justify-content:center}
+.holder-label{font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.35);margin-bottom:5px}
+.holder-name{font-size:20px;font-weight:600;color:#fff;margin-bottom:.3rem;line-height:1.2}
+.ref-row{display:flex;align-items:center;gap:6px;margin-bottom:.4rem}
+.ref-label{font-size:10px;color:rgba(255,255,255,.35)}
+.ref-code{font-size:13px;font-family:'Courier New',monospace;color:var(--gold);letter-spacing:.07em}
+.dish-row{font-size:11px;color:rgba(255,255,255,.45);line-height:1.4}
+.dish-row span{color:rgba(255,255,255,.75)}
+
+.ticket-foot{background:rgba(212,160,23,.08);border-top:1px solid rgba(212,160,23,.2);padding:.7rem 1.5rem;text-align:center}
+.ticket-foot-txt{font-size:11px;color:rgba(255,255,255,.45);line-height:1.5}
+.ticket-foot-txt span{color:var(--gold)}
+
+/* SHARE BUTTON */
+.share-row{display:flex;gap:8px;animation:fadeUp .6s .4s ease both;opacity:0;animation-fill-mode:forwards}
+.share-btn{flex:1;padding:12px;border:1.5px solid #e0d0be;border-radius:10px;background:#fff;color:#333;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .12s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.share-btn:hover{background:#fffbf2;border-color:var(--gold)}
+
+/* SHARE MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:1.5rem;max-width:400px;width:100%}
+.modal-title{font-size:15px;font-weight:700;color:#333;margin-bottom:.5rem}
+.modal-sub{font-size:12px;color:#888;margin-bottom:1rem;line-height:1.5}
+.url-row{display:flex;gap:8px;align-items:center;background:#f5f5f0;border-radius:8px;padding:9px 12px;margin-bottom:1rem}
+.url-txt{font-size:12px;font-family:'Courier New',monospace;color:#555;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.url-copy{font-size:11px;padding:5px 12px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-family:inherit;white-space:nowrap;font-weight:600}
+.modal-close{width:100%;padding:10px;border:1.5px solid #e0d0be;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;color:#555}
+
+/* ERROR */
+.err-msg{background:#fff0f0;border:1px solid #ffcccc;border-radius:8px;padding:10px 13px;font-size:12px;color:#c00;margin-bottom:1rem;display:none}
+
+@media(max-width:480px){
+  .two-col{grid-template-columns:1fr 1fr}
+  .hero-title{font-size:22px}
+  .ticket-event{font-size:22px}
+  .holder-name{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- FORM SCREEN -->
+  <div id="formScreen">
+    <div class="hero">
+      <div class="hero-title">Shore Thing 🌊</div>
+      <div class="hero-sub">Afro Summer Splash &nbsp;·&nbsp; Beach Edition &nbsp;·&nbsp; 20 June 2026</div>
+      <div class="hero-pills">
+        <span class="pill">📍 Hove Lawns, Brighton</span>
+        <span class="pill">🕒 3:00 – 7:00pm</span>
+        <span class="pill">✨ Free to attend</span>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="err-msg" id="errMsg"></div>
+      <form id="regForm" novalidate>
+
+        <div class="two-col">
+          <div class="field">
+            <label for="fname">First name <span class="req">*</span></label>
+            <input type="text" id="fname" placeholder="Amara" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label for="lname">Last name <span class="req">*</span></label>
+            <input type="text" id="lname" placeholder="Okafor" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email address <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+        </div>
+
+        <div class="field">
+          <label for="insta">Instagram handle <span class="opt">(optional)</span></label>
+          <input type="text" id="insta" placeholder="@yourhandle">
+          <div class="hint">So we can tag you in event photos!</div>
+        </div>
+
+        <div class="field">
+          <label for="dish">What dish are you bringing? <span class="req">*</span></label>
+          <input type="text" id="dish" placeholder="e.g. Jollof rice, puff puff, fruit platter...">
+          <div class="hint">One dish to share — all cuisines welcome!</div>
+        </div>
+
+        <div class="field">
+          <label>Have you attended an Afro Summer Splash event before? <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item" id="r1" onclick="selectR('r1','r2')">
+              <input type="radio" name="prev" value="yes">
+              <span>Yes — I came to the Sip &amp; Paint</span>
+            </label>
+            <label class="radio-item" id="r2" onclick="selectR('r2','r1')">
+              <input type="radio" name="prev" value="no">
+              <span>No — this will be my first time</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Register for Shore Thing 🌊</button>
+        <div class="sub-note">Limited spots &nbsp;·&nbsp; Registration closes 18 June 2026</div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- TICKET SCREEN — clean, nothing below the ticket -->
+  <div id="ticketScreen">
+    <div class="confetti-row">🎉🌊✨🥁🎊</div>
+
+    <div class="confirm-head">
+      <div class="confirm-title" id="confirmTitle">You're officially on the Shore!</div>
+      <div class="confirm-sub">Spot confirmed. Screenshot your ticket and we'll see you on 20 June. Welcome to the community! 🌊</div>
+    </div>
+
+    <div class="ticket-outer">
+      <div class="ticket">
+        <div class="ticket-top">
+          <svg class="ticket-waves" viewBox="0 0 140 140" fill="none">
+            <path d="M0 70 Q35 35 70 70 Q105 105 140 70" stroke="#D4A017" stroke-width="2.5" fill="none"/>
+            <path d="M0 95 Q35 60 70 95 Q105 130 140 95" stroke="#D4A017" stroke-width="1.8" fill="none"/>
+            <path d="M0 45 Q35 10 70 45 Q105 80 140 45" stroke="#D4A017" stroke-width="1.2" fill="none"/>
+          </svg>
+          <div class="ticket-brand">
+            <span class="ticket-brand-name">Afro Summer Splash</span>
+            <span class="ticket-badge">Confirmed ✓</span>
+          </div>
+          <div class="ticket-event">Shore Thing 🌊</div>
+          <div class="ticket-tagline">A Beach Hangout &nbsp;·&nbsp; Beach Edition</div>
+        </div>
+
+        <div class="ticket-meta">
+          <div class="meta-item">
+            <div class="meta-label">Date</div>
+            <div class="meta-val">20 Jun 2026</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Time</div>
+            <div class="meta-val">3:00 – 7pm</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Location</div>
+            <div class="meta-val">Hove Lawns</div>
+          </div>
+        </div>
+
+        <div class="tear-line">
+          <div class="tear-circle"></div>
+          <div class="tear-dots"></div>
+          <div class="tear-circle"></div>
+        </div>
+
+        <div class="ticket-bottom">
+          <div class="qr-wrap" id="qrWrap"></div>
+          <div>
+            <div class="holder-label">Registered attendee</div>
+            <div class="holder-name" id="ticketName">—</div>
+            <div class="ref-row">
+              <span class="ref-label">Ref:</span>
+              <span class="ref-code" id="ticketRef">—</span>
+            </div>
+            <div class="dish-row">Bringing: <span id="ticketDish">—</span></div>
+          </div>
+        </div>
+
+        <div class="ticket-foot">
+          <div class="ticket-foot-txt">Meeting point: <span>Peace Statue, Hove Seafront</span> &nbsp;·&nbsp; Don't forget your dish 🍽️</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="share-row">
+      <button class="share-btn" onclick="openShare()">🔗 Share with friends</button>
+      <button class="share-btn" onclick="alert('Take a screenshot of this page to save your ticket!')">💾 Save ticket</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title">Share Shore Thing 🌊</div>
+    <div class="modal-sub">Copy the link below and send it to anyone you think would love this community day.</div>
+    <div class="url-row">
+      <span class="url-txt" id="shareUrlTxt">Loading...</span>
+      <button class="url-copy" onclick="copyShareUrl()" id="copyUrlBtn">Copy</button>
+    </div>
+    <button class="modal-close" onclick="document.getElementById('modalBg').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<script>
+function selectR(on, off) {
+  document.getElementById(on).classList.add('selected');
+  document.getElementById(off).classList.remove('selected');
+}
+
+function genRef(str) {
+  var s = str.split('').reduce(function(a,c){ return a + c.charCodeAt(0); }, 0);
+  return 'ASS-' + (1000 + (s * 7919) % 9000);
+}
+
+document.getElementById('regForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  var fname = document.getElementById('fname').value.trim();
+  var lname = document.getElementById('lname').value.trim();
+  var email = document.getElementById('email').value.trim();
+  var insta = document.getElementById('insta').value.trim();
+  var dish  = document.getElementById('dish').value.trim();
+  var prev  = document.querySelector('input[name="prev"]:checked');
+
+  var missing = [];
+  if (!fname) missing.push('first name');
+  if (!lname) missing.push('last name');
+  if (!email || !/\S+@\S+\.\S+/.test(email)) missing.push('a valid email');
+  if (!dish) missing.push('your dish');
+  if (!prev) missing.push('whether you\'ve attended before');
+
+  var errEl = document.getElementById('errMsg');
+  if (missing.length) {
+    errEl.textContent = 'Please fill in: ' + missing.join(', ');
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  var btn = document.getElementById('submitBtn');
+  btn.textContent = 'Securing your spot...';
+  btn.disabled = true;
+
+  // Send to Formspree — replace xykayboj with your actual Formspree ID
+  var formData = new FormData();
+  formData.append('First Name', fname);
+  formData.append('Last Name', lname);
+  formData.append('Email', email);
+  formData.append('Instagram', insta || 'Not provided');
+  formData.append('Dish', dish);
+  formData.append('Attended Before', prev.value === 'yes' ? 'Yes — Sip & Paint' : 'No — First time');
+
+  fetch('https://formspree.io/f/xykayboj', {
+    method: 'POST',
+    body: formData,
+    headers: { 'Accept': 'application/json' }
+  })
+  .catch(function() {
+    // Still show ticket even if submission fails — don't block the user
+    console.log('Submission note: update Formspree ID to capture responses');
+  })
+  .finally(function() {
+    showTicket(fname, lname, email, dish, insta);
+  });
+});
+
+function showTicket(fname, lname, email, dish, insta) {
+  var fullName = fname + ' ' + lname;
+  var ref = genRef(email + dish);
+
+  document.getElementById('confirmTitle').textContent = 'You\'re officially on the Shore, ' + fname + '!';
+  document.getElementById('ticketName').textContent = fname;
+  document.getElementById('ticketRef').textContent = ref;
+  document.getElementById('ticketDish').textContent = dish;
+
+  document.getElementById('qrWrap').innerHTML = '';
+  new QRCode(document.getElementById('qrWrap'), {
+    text: 'https://www.instagram.com/afrosummersplash',
+    width: 92, height: 92,
+    colorDark: '#1a1a2e', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  document.getElementById('formScreen').style.display = 'none';
+  document.getElementById('ticketScreen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openShare() {
+  document.getElementById('shareUrlTxt').textContent = window.location.href;
+  document.getElementById('modalBg').classList.add('open');
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modalBg'))
+    document.getElementById('modalBg').classList.remove('open');
+}
+function copyShareUrl() {
+  navigator.clipboard.writeText(window.location.href).then(function() {
+    var b = document.getElementById('copyUrlBtn');
+    b.textContent = 'Copied!';
+    setTimeout(function(){ b.textContent = 'Copy'; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
