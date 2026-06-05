@@ -268,7 +268,7 @@ input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,160,23,.12)}
 
     <div class="share-row">
       <button class="share-btn" onclick="openShare()">🔗 Share with friends</button>
-      <button class="share-btn" onclick="alert('Take a screenshot of this page to save your ticket!')">💾 Save ticket</button>
+      <button class="share-btn" onclick="addToCalendar()">📅 Add to calendar</button>
     </div>
   </div>
 
@@ -400,6 +400,32 @@ function copyShareUrl() {
     b.textContent = 'Copied!';
     setTimeout(function(){ b.textContent = 'Copy'; }, 2000);
   });
+}
+  function addToCalendar() {
+  var icsContent = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Afro Summer Splash//Shore Thing//EN',
+    'BEGIN:VEVENT',
+    'DTSTART:20260620T140000Z',
+    'DTEND:20260620T180000Z',
+    'SUMMARY:Shore Thing 🌊 – Afro Summer Splash',
+    'DESCRIPTION:A community beach day at Hove Lawns. Meeting point: Peace Statue\\, Hove Seafront. Don\'t forget your dish!',
+    'LOCATION:Peace Statue\\, Hove Seafront\\, Brighton\\, BN3 2WJ',
+    'STATUS:CONFIRMED',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  var blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'shore-thing-afro-summer-splash.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 </script>
 <script>
